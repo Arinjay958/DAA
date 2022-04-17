@@ -4,8 +4,8 @@ after sorting each one of them. Your program should also find number of comparis
 inversions during sorting the array.*/
 #include <iostream>
 using namespace std;
-long long mergeSort(int arr[], int l, int r);
-long long merge(int arr[], int l, int m, int r);
+long long mergeSort(int arr[], int l, int r, long long *compa);
+long long merge(int arr[], int l, int m, int r, long long *compa);
 // void inversionCount(int arr[], int n);
 int main()
 {
@@ -24,32 +24,34 @@ int main()
         {
             cin >> arr[i];
         }
-        long long inversions = mergeSort(arr, 0, n - 1);
+        long long compa = 0;
+        long long inversions = mergeSort(arr, 0, n - 1, &compa);
         cout << "Sorted array is : "
              << "\n";
         for (int i = 0; i < n; i++)
         {
             cout << arr[i] << " ";
         }
-        cout << "Total Number of inversions are: " << inversions;
+        cout << "\nTotal Number of inversions are: " << inversions << "\n";
+        cout << "Total Number of comparisions are: " << compa << "\n";
     }
     return 0;
 }
-long long mergeSort(int arr[], int l, int r)
+long long mergeSort(int arr[], int l, int r, long long *compa)
 {
-    int invCount = 0;
+    long long invCount = 0;
     if (l < r)
     {
         int mid = l + (r - l) / 2;
-        invCount += mergeSort(arr, l, mid);
-        invCount += mergeSort(arr, mid + 1, r);
-        invCount += merge(arr, l, mid, r);
+        invCount += mergeSort(arr, l, mid, compa);
+        invCount += mergeSort(arr, mid + 1, r, compa);
+        invCount += merge(arr, l, mid, r, compa);
     }
     return invCount;
 }
-long long merge(int arr[], int l, int mid, int r)
+long long merge(int arr[], int l, int mid, int r, long long *compa)
 {
-    int invCount = 0;
+    long long invCount = 0;
     int n1 = mid - l + 1;
     int n2 = r - mid;
     int L[n1], R[n2], i;
@@ -65,6 +67,7 @@ long long merge(int arr[], int l, int mid, int r)
     i = 0, j = 0, k = l;
     while (i < n1 && j < n2)
     {
+        (*compa)++;
         if (L[i] <= R[j])
         {
             arr[k] = L[i];
@@ -76,7 +79,7 @@ long long merge(int arr[], int l, int mid, int r)
             arr[k] = R[j];
             j++;
             k++;
-            invCount = invCount + (n1 - i);//as two halves which is going to be merged are individually sorted so if there is an inversion due to any element then all the element after it would be going to count for inversion
+            invCount = invCount + (n1 - i);
         }
     }
     while (i < n1)
