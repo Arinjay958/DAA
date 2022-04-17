@@ -76,7 +76,7 @@ long long merge(int arr[], int l, int mid, int r)
             arr[k] = R[j];
             j++;
             k++;
-            invCount = invCount + (n1 - i);
+            invCount = invCount + (n1 - i);//as two halves which is going to be merged are individually sorted so if there is an inversion due to any element then all the element after it would be going to count for inversion
         }
     }
     while (i < n1)
